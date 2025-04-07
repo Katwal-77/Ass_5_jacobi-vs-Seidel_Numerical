@@ -1,0 +1,6 @@
+Test Case,Matrix Size,Jacobi Iterations,Jacobi Time (s),Jacobi Error,Gauss-Seidel Iterations,Gauss-Seidel Time (s),Gauss-Seidel Error,Faster Method,Time Speedup,More Accurate Method,Accuracy Ratio
+Small system (10×10),10×10,90,0.002607 ± 0.000098,9.000058e-09,12,0.000803 ± 0.000256,1.402426e-08,Gauss-Seidel,3.24×,Jacobi,1.56×
+Medium system (50×50),50×50,488,0.061881 ± 0.006290,9.760354e-09,13,0.003097 ± 0.000066,4.021888e-09,Gauss-Seidel,19.98×,Gauss-Seidel,2.43×
+Large system (200×200),200×200,1819,0.929627 ± 0.022764,9.964854e-09,13,0.013915 ± 0.000359,3.353225e-09,Gauss-Seidel,66.81×,Gauss-Seidel,2.97×
+Tridiagonal system (100×100),100×100,27,0.007780 ± 0.001059,7.037531e-09,17,0.008789 ± 0.000156,7.188398e-09,Jacobi,1.13×,Jacobi,1.02×
+Ill-conditioned system (50×50),50×50,24,0.003274 ± 0.000307,8.906184e-09,9,0.002525 ± 0.000102,3.122802e-09,Gauss-Seidel,1.30×,Gauss-Seidel,2.85×

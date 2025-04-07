@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jacobi vs. Gauss-Seidel Methods Comparison</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="assignment-info">Assignment 5 - Numerical Analysis</div>
+        <h1>Comparison of Jacobi and Gauss-Seidel Methods</h1>
+        <p class="subtitle">Performance Analysis in Terms of CPU Time and Accuracy</p>
+        <div class="student-info">By: Prem Katuwal (202424080129)</div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#methods">Methods</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#visualizations">Visualizations</a></li>
+            <li><a href="#code">Code</a></li>
+            <li><a href="#downloads">Downloads</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>
+                This project implements and compares the Jacobi and Gauss-Seidel iterative methods for solving systems of linear equations.
+                Both methods are widely used in numerical analysis, particularly for large sparse systems where direct methods become computationally expensive.
+            </p>
+            <p>
+                The comparison focuses specifically on two key performance metrics:
+            </p>
+            <ul>
+                <li>CPU time (computational efficiency)</li>
+                <li>Accuracy (solution precision)</li>
+            </ul>
+        </section>
+
+        <section id="methods">
+            <h2>Methods</h2>
+
+            <div class="method-box">
+                <h3>Jacobi Method</h3>
+                <p>
+                    The Jacobi method solves a system by isolating each diagonal element and solving for the corresponding variable.
+                    For each iteration k+1, the method computes:
+                </p>
+                <div class="equation">
+                    x<sub>i</sub><sup>(k+1)</sup> = (b<sub>i</sub> - ∑<sub>j≠i</sub> a<sub>ij</sub>x<sub>j</sub><sup>(k)</sup>) / a<sub>ii</sub>
+                </div>
+                <p>
+                    This method uses only values from the previous iteration, making it naturally parallelizable.
+                </p>
+            </div>
+
+            <div class="method-box">
+                <h3>Gauss-Seidel Method</h3>
+                <p>
+                    The Gauss-Seidel method improves upon Jacobi by immediately using updated values as they become available.
+                    For each iteration k+1, the method computes:
+                </p>
+                <div class="equation">
+                    x<sub>i</sub><sup>(k+1)</sup> = (b<sub>i</sub> - ∑<sub>j&lt;i</sub> a<sub>ij</sub>x<sub>j</sub><sup>(k+1)</sup> - ∑<sub>j&gt;i</sub> a<sub>ij</sub>x<sub>j</sub><sup>(k)</sup>) / a<sub>ii</sub>
+                </div>
+                <p>
+                    This typically leads to faster convergence but makes the method inherently sequential.
+                </p>
+            </div>
+
+            <div class="convergence">
+                <h3>Convergence Conditions</h3>
+                <p>Both methods converge for any initial guess if:</p>
+                <ul>
+                    <li>The matrix A is strictly diagonally dominant (|a<sub>ii</sub>| > ∑<sub>j≠i</sub> |a<sub>ij</sub>| for all i), or</li>
+                    <li>A is symmetric and positive definite</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="results">
+            <h2>Results</h2>
+
+            <h3>CPU Time Performance</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test Case</th>
+                            <th>Jacobi Time (s)</th>
+                            <th>Gauss-Seidel Time (s)</th>
+                            <th>Faster Method</th>
+                            <th>Speedup</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Small system (10×10)</td>
+                            <td>0.002607</td>
+                            <td>0.000803</td>
+                            <td>Gauss-Seidel</td>
+                            <td>3.24×</td>
+                        </tr>
+                        <tr>
+                            <td>Medium system (50×50)</td>
+                            <td>0.061881</td>
+                            <td>0.003097</td>
+                            <td>Gauss-Seidel</td>
+                            <td>19.98×</td>
+                        </tr>
+                        <tr>
+                            <td>Large system (200×200)</td>
+                            <td>0.929627</td>
+                            <td>0.013915</td>
+                            <td>Gauss-Seidel</td>
+                            <td>66.81×</td>
+                        </tr>
+                        <tr>
+                            <td>Tridiagonal system (100×100)</td>
+                            <td>0.007780</td>
+                            <td>0.008789</td>
+                            <td>Jacobi</td>
+                            <td>1.13×</td>
+                        </tr>
+                        <tr>
+                            <td>Ill-conditioned system (50×50)</td>
+                            <td>0.003274</td>
+                            <td>0.002525</td>
+                            <td>Gauss-Seidel</td>
+                            <td>1.30×</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Accuracy Performance</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test Case</th>
+                            <th>Jacobi Error</th>
+                            <th>Gauss-Seidel Error</th>
+                            <th>More Accurate Method</th>
+                            <th>Accuracy Ratio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Small system (10×10)</td>
+                            <td>9.00e-09</td>
+                            <td>1.40e-08</td>
+                            <td>Jacobi</td>
+                            <td>1.56×</td>
+                        </tr>
+                        <tr>
+                            <td>Medium system (50×50)</td>
+                            <td>9.76e-09</td>
+                            <td>4.02e-09</td>
+                            <td>Gauss-Seidel</td>
+                            <td>2.43×</td>
+                        </tr>
+                        <tr>
+                            <td>Large system (200×200)</td>
+                            <td>9.96e-09</td>
+                            <td>3.35e-09</td>
+                            <td>Gauss-Seidel</td>
+                            <td>2.97×</td>
+                        </tr>
+                        <tr>
+                            <td>Tridiagonal system (100×100)</td>
+                            <td>7.04e-09</td>
+                            <td>7.19e-09</td>
+                            <td>Jacobi</td>
+                            <td>1.02×</td>
+                        </tr>
+                        <tr>
+                            <td>Ill-conditioned system (50×50)</td>
+                            <td>8.91e-09</td>
+                            <td>3.12e-09</td>
+                            <td>Gauss-Seidel</td>
+                            <td>2.85×</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Key Findings</h3>
+            <div class="findings">
+                <div class="finding-box">
+                    <h4>CPU Time</h4>
+                    <ul>
+                        <li>Gauss-Seidel is generally faster in 4 out of 5 test cases</li>
+                        <li>Performance gap widens with system size (up to 66.81× faster)</li>
+                        <li>For tridiagonal systems, Jacobi is 1.13× faster</li>
+                    </ul>
+                </div>
+                <div class="finding-box">
+                    <h4>Accuracy</h4>
+                    <ul>
+                        <li>Both methods achieve high accuracy (errors ~10<sup>-9</sup>)</li>
+                        <li>Gauss-Seidel is more accurate in 3 out of 5 test cases</li>
+                        <li>For small and tridiagonal systems, Jacobi is slightly more accurate</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="visualizations">
+            <h2>Visualizations</h2>
+
+            <div class="visualization">
+                <h3>CPU Time Comparison</h3>
+                <img src="cpu_time_detailed.png" alt="CPU Time Comparison">
+                <p>Comparison of CPU time performance across different test cases</p>
+            </div>
+
+            <div class="visualization">
+                <h3>Accuracy Comparison</h3>
+                <img src="accuracy_detailed.png" alt="Accuracy Comparison">
+                <p>Comparison of solution accuracy across different test cases</p>
+            </div>
+
+            <div class="visualization">
+                <h3>Combined Performance</h3>
+                <img src="combined_performance.png" alt="Combined Performance">
+                <p>CPU Time vs. Accuracy for both methods</p>
+            </div>
+
+            <div class="visualization">
+                <h3>Convergence Comparison</h3>
+                <img src="convergence_comparison.png" alt="Convergence Comparison">
+                <p>Convergence history for basic test cases</p>
+            </div>
+        </section>
+
+        <section id="code">
+            <h2>Code</h2>
+
+            <div class="code-section">
+                <h3>Jacobi Method Implementation</h3>
+                <pre><code>def jacobi_method(A: np.ndarray, b: np.ndarray, x0: Optional[np.ndarray] = None,
+                 max_iterations: int = 1000, tolerance: float = 1e-10,
+                 return_history: bool = False) -> Dict[str, Any]:
+    """
+    Solve a system of linear equations Ax = b using the Jacobi iterative method.
+
+    Parameters:
+    -----------
+    A : np.ndarray
+        Coefficient matrix of shape (n, n)
+    b : np.ndarray
+        Right-hand side vector of shape (n,)
+    x0 : np.ndarray, optional
+        Initial guess for the solution, defaults to zeros
+    max_iterations : int, optional
+        Maximum number of iterations to perform
+    tolerance : float, optional
+        Convergence criterion: stop when the relative residual is below this value
+    return_history : bool, optional
+        Whether to return the history of residuals and solutions
+
+    Returns:
+    --------
+    Dict[str, Any]
+        Dictionary containing:
+        - 'solution': The solution vector
+        - 'iterations': Number of iterations performed
+        - 'residuals': List of residual norms (if return_history=True)
+        - 'cpu_time': Time taken for computation
+        - 'converged': Boolean indicating whether the method converged
+        - 'error': Final relative error
+    """
+    # Start timing
+    start_time = time.time()
+
+    # Get the size of the system
+    n = A.shape[0]
+
+    # Initialize the solution vector if not provided
+    if x0 is None:
+        x = np.zeros(n)
+    else:
+        x = x0.copy()
+
+    # Extract diagonal and create inverse diagonal matrix D^-1
+    D = np.diag(A)
+
+    # Check if the method can be applied (no zeros on the diagonal)
+    if np.any(np.abs(D) < 1e-10):
+        return {
+            'solution': None,
+            'iterations': 0,
+            'converged': False,
+            'cpu_time': time.time() - start_time,
+            'error': np.inf,
+            'message': "Method cannot be applied: zero(s) on the diagonal"
+        }
+
+    # Initialize variables for iteration
+    x_new = np.zeros_like(x)
+    residuals = []
+    initial_residual = np.linalg.norm(b - A @ x)
+
+    # Precompute the rest of the matrix (A - D)
+    R = A - np.diag(D)
+
+    # Iteration loop
+    for iteration in range(max_iterations):
+        # Compute new approximation: x_new = D^-1 * (b - R*x)
+        for i in range(n):
+            x_new[i] = (b[i] - np.sum(R[i] * x)) / D[i]
+
+        # Calculate residual
+        residual = np.linalg.norm(b - A @ x_new) / np.linalg.norm(b)
+        if return_history:
+            residuals.append(residual)
+
+        # Check for convergence
+        if residual < tolerance:
+            x = x_new.copy()
+            break
+
+        # Update solution for next iteration
+        x = x_new.copy()
+
+    # Calculate final error and CPU time
+    final_residual = np.linalg.norm(b - A @ x) / np.linalg.norm(b)
+    cpu_time = time.time() - start_time
+
+    # Prepare return dictionary
+    result = {
+        'solution': x,
+        'iterations': iteration + 1,
+        'converged': residual < tolerance,
+        'cpu_time': cpu_time,
+        'error': final_residual
+    }
+
+    if return_history:
+        result['residuals'] = residuals
+
+    return result</code></pre>
+            </div>
+
+            <div class="code-section">
+                <h3>Gauss-Seidel Method Implementation</h3>
+                <pre><code>def gauss_seidel_method(A: np.ndarray, b: np.ndarray, x0: Optional[np.ndarray] = None,
+                       max_iterations: int = 1000, tolerance: float = 1e-10,
+                       return_history: bool = False) -> Dict[str, Any]:
+    """
+    Solve a system of linear equations Ax = b using the Gauss-Seidel iterative method.
+
+    Parameters:
+    -----------
+    A : np.ndarray
+        Coefficient matrix of shape (n, n)
+    b : np.ndarray
+        Right-hand side vector of shape (n,)
+    x0 : np.ndarray, optional
+        Initial guess for the solution, defaults to zeros
+    max_iterations : int, optional
+        Maximum number of iterations to perform
+    tolerance : float, optional
+        Convergence criterion: stop when the relative residual is below this value
+    return_history : bool, optional
+        Whether to return the history of residuals and solutions
+
+    Returns:
+    --------
+    Dict[str, Any]
+        Dictionary containing:
+        - 'solution': The solution vector
+        - 'iterations': Number of iterations performed
+        - 'residuals': List of residual norms (if return_history=True)
+        - 'cpu_time': Time taken for computation
+        - 'converged': Boolean indicating whether the method converged
+        - 'error': Final relative error
+    """
+    # Start timing
+    start_time = time.time()
+
+    # Get the size of the system
+    n = A.shape[0]
+
+    # Initialize the solution vector if not provided
+    if x0 is None:
+        x = np.zeros(n)
+    else:
+        x = x0.copy()
+
+    # Extract diagonal elements
+    D = np.diag(A)
+
+    # Check if the method can be applied (no zeros on the diagonal)
+    if np.any(np.abs(D) < 1e-10):
+        return {
+            'solution': None,
+            'iterations': 0,
+            'converged': False,
+            'cpu_time': time.time() - start_time,
+            'error': np.inf,
+            'message': "Method cannot be applied: zero(s) on the diagonal"
+        }
+
+    # Initialize variables for iteration
+    residuals = []
+
+    # Iteration loop
+    for iteration in range(max_iterations):
+        x_old = x.copy()
+
+        # Update each component of x
+        for i in range(n):
+            # Compute sum of already updated components
+            sum1 = np.sum(A[i, :i] * x[:i])
+            # Compute sum of components not yet updated
+            sum2 = np.sum(A[i, i+1:] * x_old[i+1:])
+            # Update x[i]
+            x[i] = (b[i] - sum1 - sum2) / A[i, i]
+
+        # Calculate residual
+        residual = np.linalg.norm(b - A @ x) / np.linalg.norm(b)
+        if return_history:
+            residuals.append(residual)
+
+        # Check for convergence
+        if residual < tolerance:
+            break
+
+    # Calculate final error and CPU time
+    final_residual = np.linalg.norm(b - A @ x) / np.linalg.norm(b)
+    cpu_time = time.time() - start_time
+
+    # Prepare return dictionary
+    result = {
+        'solution': x,
+        'iterations': iteration + 1,
+        'converged': residual < tolerance,
+        'cpu_time': cpu_time,
+        'error': final_residual
+    }
+
+    if return_history:
+        result['residuals'] = residuals
+
+    return result</code></pre>
+            </div>
+        </section>
+
+        <section id="downloads">
+            <h2>Downloads</h2>
+            <div class="downloads-container">
+                <div class="download-item">
+                    <h3>Code Files</h3>
+                    <ul>
+                        <li><a href="iterative_solvers.py" download>iterative_solvers.py</a> - Implementation of both methods</li>
+                        <li><a href="comparison.py" download>comparison.py</a> - Basic comparison script</li>
+                        <li><a href="advanced_test.py" download>advanced_test.py</a> - Advanced test cases</li>
+                        <li><a href="comprehensive_benchmark.py" download>comprehensive_benchmark.py</a> - Comprehensive benchmark</li>
+                        <li><a href="performance_comparison.py" download>performance_comparison.py</a> - Focused performance comparison</li>
+                        <li><a href="real_world_example.py" download>real_world_example.py</a> - Real-world application example</li>
+                    </ul>
+                </div>
+
+                <div class="download-item">
+                    <h3>Documentation</h3>
+                    <ul>
+                        <li><a href="Jacobi_vs_Gauss-Seidel_Report_with_Visualizations.docx" download>Full Report (Word)</a> - Comprehensive report with all details</li>
+                        <li><a href="cpu_accuracy_analysis.md" download>CPU & Accuracy Analysis</a> - Detailed analysis of performance</li>
+                        <li><a href="performance_summary.md" download>Performance Summary</a> - Concise summary of findings</li>
+                    </ul>
+                </div>
+
+                <div class="download-item">
+                    <h3>Visualizations</h3>
+                    <ul>
+                        <li><a href="cpu_time_detailed.png" download>CPU Time Comparison</a></li>
+                        <li><a href="accuracy_detailed.png" download>Accuracy Comparison</a></li>
+                        <li><a href="combined_performance.png" download>Combined Performance</a></li>
+                        <li><a href="convergence_comparison.png" download>Convergence Comparison</a></li>
+                        <li><a href="speedup_accuracy_ratio.png" download>Speedup & Accuracy Ratio</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Numerical Analysis Project: Comparison of Jacobi and Gauss-Seidel Methods</p>
+        <p>&copy; 2025 - All Rights Reserved to Prem Katuwal (202424080129)</p>
+    </footer>
+</body>
+</html>

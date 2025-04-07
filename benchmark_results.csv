@@ -1,0 +1,7 @@
+Test Case,Matrix Size,Condition Number,Jacobi Iterations,Gauss-Seidel Iterations,Iteration Speedup,Jacobi Time (s),Gauss-Seidel Time (s),Time Speedup,Jacobi Error,Gauss-Seidel Error
+Well-conditioned 10×10 system,10×10,3.17e+00,39,11,3.55×,0.001688,0.000637,2.65× (GS),8.27e-09,1.01e-08
+Moderate-conditioned 50×50 system,50×50,2.31e+00,29,8,3.62×,0.004210,0.002295,1.83× (GS),5.20e-09,1.36e-08
+Ill-conditioned 100×100 system,100×100,2.27e+00,20,8,2.50×,0.005799,0.007050,0.82× (J),7.06e-09,1.24e-09
+Tridiagonal 100×100 system,100×100,3.00e+00,27,17,1.59×,0.007494,0.009209,0.81× (J),7.04e-09,7.19e-09
+2D Poisson 225×225 system,225×225,1.03e+02,841,422,1.99×,0.496090,0.508928,0.97× (J),7.04e-08,6.83e-08
+Nearly singular 50×50 system,50×50,2.80e+00,22,13,1.69×,0.003154,0.003276,0.96× (J),1.37e-08,8.05e-09
